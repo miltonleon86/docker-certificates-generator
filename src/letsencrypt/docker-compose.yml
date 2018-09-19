@@ -1,21 +1,22 @@
 version: '3.1'
 
 services:
-
   letsencrypt-nginx-container:
     container_name: 'letsencrypt-nginx-container'
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - VIRTUAL_HOST=${virtual_host}
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./letsencrypt-site:/usr/share/nginx/html
     environment:
-      - VIRTUAL_HOST=XXX.com,www.XXX.com
+      - VIRTUAL_HOST=${virtual_host}
     networks:
-      - XXX
+      - nginx-proxy-network
 
 networks:
-  XXX:
+  nginx-proxy-network:
     external:
-      name: XXX
+      name: ${external_network}
